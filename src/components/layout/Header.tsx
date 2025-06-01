@@ -39,22 +39,17 @@ const Header = () => {
             height={100}
           />
         </Link>
-
         {/* Desktop Navigation */}
         <div className="hidden md:flex md:gap-5 lg:gap-10 uppercase bg-transparent ml-4 transition-colors ">
-          <Link href="/">Dashboard</Link>
+          <Link href="/" className="border-1 border-black">
+            Dashboard
+          </Link>
           <Link href="/send">Send Capsule</Link>
           <Link href="/capsules">My Capsules</Link>
         </div>
 
         {/* Desktop LET'S TALK button */}
-        <div
-          className="hidden md:flex md:flex-row md:text-sm lg:text-[14px] items-center  px-5 h-10 font-semibold mr-20 ml-20 sm:translate-y-[20px] "
-          style={{
-            clipPath:
-              "polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)",
-          }}
-        >
+        <div className="hidden md:flex md:flex-row md:text-sm lg:text-[14px] items-center  px-5 h-10 font-semibold mr-20 ml-20 sm:translate-y-[20px] border-1 border-black flex-row-reverse">
           <ConnectButton />
         </div>
 
