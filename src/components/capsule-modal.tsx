@@ -1,12 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  X,
-  Gift,
-  Download,
-  Share,
-  Coins,
-  Image as ImageIcon,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { Gift, Download, Share, Coins, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

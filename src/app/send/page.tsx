@@ -27,9 +27,10 @@ import {
 } from "lucide-react";
 import { useSuiWallet } from "@/hooks/use-sui-wallet";
 import { useToast } from "@/hooks/use-toast";
-import { useLocation } from "wouter";
+import { useRouter } from "next/navigation";
 import { NFTSelector } from "@/components/nft-selector";
 import { useWalletAdapter } from "@/hooks/useWalletAdapter";
+import { HyperText } from "@/components/magicui/hyper-text";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -48,10 +49,14 @@ type FormData = z.infer<typeof formSchema>;
 export default function SendCapsule() {
   const { address, isConnected } = useSuiWallet();
   const { toast } = useToast();
-  const [, setLocation] = useLocation();
+  const router = useRouter();
   const { sendCapsule } = useWalletAdapter();
 
-  const [selectedNFT, setSelectedNFT] = useState<any>(null);
+  const [selectedNFT, setSelectedNFT] = useState<{
+    id: string;
+    name: string;
+    collection: string;
+  } | null>(null);
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
 
   const form = useForm<FormData>({
@@ -69,7 +74,11 @@ export default function SendCapsule() {
     },
   });
 
-  const handleNFTSelect = (nft: any) => {
+  const handleNFTSelect = (nft: {
+    id: string;
+    name: string;
+    collection: string;
+  }) => {
     setSelectedNFT(nft);
     form.setValue("nftId", nft.id);
     form.setValue("nftName", nft.name);
@@ -113,11 +122,11 @@ export default function SendCapsule() {
 
       // Dummy values for required blockchain parameters - in a real app, these MUST be fetched or configured
       // IMPORTANT: Replace these placeholder values with actual IDs from your Sui blockchain system to avoid errors like 'Package object does not exist'
-      const vaultId = process.env.VITE_SUI_VAULT_OBJECT_ID || "0x1"; // Placeholder, MUST replace with actual vault ID
+      const vaultId = process.env.NEXT_PUBLIC_SUI_VAULT_OBJECT_ID || "0x1"; // Placeholder, MUST replace with actual vault ID
       console.log("vaultId:", vaultId);
-      const coinId = process.env.VITE_SUI_COIN_OBJECT_ID || "0x1"; // Placeholder, MUST replace with actual coin ID
+      const coinId = process.env.NEXT_PUBLIC_SUI_COIN_OBJECT_ID || "0x1"; // Placeholder, MUST replace with actual coin ID
       console.log("coinId:", coinId);
-      const clockId = process.env.VITE_SUI_CLOCK_ID || "0x6"; // Common Sui clock ID, adjust if needed
+      const clockId = process.env.NEXT_PUBLIC_SUI_CLOCK_ID || "0x6"; // Common Sui clock ID, adjust if needed
       console.log("clockId:", clockId);
 
       // Convert message string to Uint8Array for encryptedContent
@@ -139,7 +148,8 @@ export default function SendCapsule() {
           ? Number(Math.floor(parseFloat(data.tokenAmount) * 1000000000))
           : 0, // Entire reward for the creator if private, or per user if public
         clockId,
-        registryId: process.env.VITE_SUI_CAPSULE_REGISTRY_OBJECT_ID || "0x1",
+        registryId:
+          process.env.NEXT_PUBLIC_SUI_CAPSULE_REGISTRY_OBJECT_ID || "0x1",
       };
 
       console.log("Sending capsule with data:", capsuleData);
@@ -153,7 +163,7 @@ export default function SendCapsule() {
         description: "Your message has been locked away until the unlock date.",
       });
 
-      setLocation("/capsules");
+      router.push("/capsules");
     } catch (error) {
       console.error("Error creating capsule:", error);
       toast({
@@ -165,29 +175,29 @@ export default function SendCapsule() {
   };
 
   return (
-    <div className="min-h-screen pt-8 md:pt-16 bg-slate-950">
-      <div className="max-w-2xl md:max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 py-6 md:py-16">
+    <div className="min-h-screen   text-gray-800  ">
+      <div className="max-w-2xl md:max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 ">
         <motion.div
           className="text-center mb-8 md:mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-2 md:mb-4">
+          <HyperText className="text-3xl md:text-6xl font-bold mb-2 md:mb-4 text-black">
             Create Time Capsule
-          </h2>
-          <p className="text-gray-400 text-base md:text-lg">
+          </HyperText>
+          <HyperText className="text-base md:text-lg text-black">
             Lock your message and assets for future revelation
-          </p>
+          </HyperText>
         </motion.div>
 
         <motion.div
-          className="gradient-border"
+          className="rounded-2xl p-4 md:p-8 shadow-xl bg-gray-100 border-1  border-black"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className="gradient-border-content p-4 md:p-8 rounded-2xl bg-slate-900 shadow-xl">
+          <div className="gradient-border-content">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -198,8 +208,8 @@ export default function SendCapsule() {
                   control={form.control}
                   name="title"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base md:text-lg font-semibold text-cyan-400 flex items-center">
+                    <FormItem className="space-y-2 md:space-y-3">
+                      <FormLabel className="text-base md:text-lg font-bold text-black flex items-center">
                         <RectangleEllipsis className="mr-2 h-5 w-5" />
                         Capsule Title
                       </FormLabel>
@@ -207,7 +217,7 @@ export default function SendCapsule() {
                         <Input
                           {...field}
                           placeholder="Give your time capsule a memorable title..."
-                          className="w-full bg-slate-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
+                          className="w-full border-black border-2 "
                         />
                       </FormControl>
                       <FormMessage />
@@ -221,7 +231,7 @@ export default function SendCapsule() {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base md:text-lg font-semibold text-cyan-400 flex items-center">
+                      <FormLabel className="text-base md:text-lg font-bold text-black flex items-center">
                         <RectangleEllipsis className="mr-2 h-5 w-5" />
                         Your Message
                       </FormLabel>
@@ -230,7 +240,7 @@ export default function SendCapsule() {
                           {...field}
                           rows={6}
                           placeholder="Write your message to the future..."
-                          className="w-full bg-slate-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
+                          className="w-full border-black border-2 "
                         />
                       </FormControl>
                       <FormMessage />
@@ -244,7 +254,7 @@ export default function SendCapsule() {
                   name="unlockDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base md:text-lg font-semibold text-cyan-400 flex items-center">
+                      <FormLabel className="text-base md:text-lg font-bold text-black flex items-center">
                         <Calendar className="mr-2 h-5 w-5" />
                         Unlock Date
                       </FormLabel>
@@ -252,7 +262,7 @@ export default function SendCapsule() {
                         <Input
                           {...field}
                           type="datetime-local"
-                          className="w-full bg-slate-800 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                          className="w-full  border-black border-2"
                         />
                       </FormControl>
                       <FormMessage />
@@ -261,15 +271,15 @@ export default function SendCapsule() {
                 />
 
                 {/* Optional Assets */}
-                <div>
-                  <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-cyan-400 flex items-center">
+                <div className="bg-white rounded-lg p-4 md:p-6 border border-gray-300">
+                  <h3 className="text-base text-black font-bold md:text-lg b-3 md:mb-4  flex items-center">
                     <Coins className="mr-2 h-5 w-5" />
                     Optional Assets
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     {/* SUI Tokens */}
-                    <div className="bg-slate-800 rounded-lg p-4 md:p-6 border border-gray-600">
-                      <h4 className="font-semibold mb-2 md:mb-3 flex items-center text-white">
+                    <div className="bg-gray-100 rounded-lg p-4 md:p-6 border border-gray-300">
+                      <h4 className="font-semibold mb-2 md:mb-3 flex items-center text-gray-800">
                         <Coins className="text-yellow-400 mr-2 h-5 w-5" />
                         SUI Tokens
                       </h4>
@@ -284,7 +294,7 @@ export default function SendCapsule() {
                                 type="number"
                                 step="0.001"
                                 placeholder="0.0"
-                                className="w-full bg-slate-900 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400"
+                                className="w-full  border-gray-300 text-gray-800 placeholder-gray-500 focus:border-cyan-600"
                               />
                             </FormControl>
                             <FormMessage />
@@ -294,8 +304,8 @@ export default function SendCapsule() {
                     </div>
 
                     {/* NFT Collection */}
-                    <div className="bg-slate-800 rounded-lg p-4 md:p-6 border border-gray-600">
-                      <h4 className="font-semibold mb-2 md:mb-3 flex items-center text-white">
+                    <div className="bg-gray-100 rounded-lg p-4 md:p-6 border border-gray-300">
+                      <h4 className="font-semibold mb-2 md:mb-3 flex items-center text-gray-800">
                         <ImageIcon className="text-purple-400 mr-2 h-5 w-5" />
                         NFT Assets
                       </h4>
@@ -306,8 +316,8 @@ export default function SendCapsule() {
                       />
 
                       {(selectedNFT || uploadedImage) && (
-                        <div className="bg-slate-900 rounded-lg p-3 md:p-4 border border-purple-400/50 mt-2 md:mt-4">
-                          <h5 className="text-xs md:text-sm font-medium text-purple-400 mb-2">
+                        <div className="bg-gray-200 rounded-lg p-3 md:p-4 border border-purple-600/50 mt-2 md:mt-4">
+                          <h5 className="text-xs md:text-sm font-medium text-purple-600 mb-2">
                             Selected NFT:
                           </h5>
                           <div className="flex items-center space-x-3">
@@ -315,10 +325,10 @@ export default function SendCapsule() {
                               <ImageIcon className="h-6 w-6 text-purple-400" />
                             </div>
                             <div>
-                              <p className="text-white font-medium text-xs md:text-base">
+                              <p className="text-gray-800 font-medium text-xs md:text-base">
                                 {selectedNFT?.name || uploadedImage?.name}
                               </p>
-                              <p className="text-gray-400 text-xs">
+                              <p className="text-gray-500 text-xs">
                                 {selectedNFT?.collection || "Custom Upload"}
                               </p>
                             </div>
@@ -337,7 +347,7 @@ export default function SendCapsule() {
                                   {...field}
                                   value={field.value || ""}
                                   placeholder="NFT Name"
-                                  className="w-full bg-slate-900 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400"
+                                  className="w-full  border-gray-300 text-gray-800 placeholder-gray-500 focus:border-cyan-600"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -354,7 +364,7 @@ export default function SendCapsule() {
                                   {...field}
                                   value={field.value || ""}
                                   placeholder="Collection Name"
-                                  className="w-full bg-slate-900 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400"
+                                  className="w-full  border-gray-300 text-gray-800 placeholder-gray-500 focus:border-cyan-600"
                                 />
                               </FormControl>
                               <FormMessage />
@@ -372,7 +382,7 @@ export default function SendCapsule() {
                   name="isPrivate"
                   render={({ field }) => (
                     <FormItem className="space-y-2 md:space-y-3">
-                      <FormLabel className="text-base md:text-lg font-semibold text-cyan-400 flex items-center">
+                      <FormLabel className="text-base md:text-lg font-bold text-black  flex items-center">
                         <Shield className="mr-2 h-5 w-5" />
                         Privacy Settings
                       </FormLabel>
@@ -390,7 +400,7 @@ export default function SendCapsule() {
                             </FormControl>
                             <Label
                               htmlFor="private"
-                              className="text-white text-sm md:text-base"
+                              className="text-gray-800 text-sm md:text-base"
                             >
                               Private - Only you can see
                             </Label>
@@ -401,7 +411,7 @@ export default function SendCapsule() {
                             </FormControl>
                             <Label
                               htmlFor="public"
-                              className="text-white text-sm md:text-base"
+                              className="text-gray-800 text-sm md:text-base"
                             >
                               Public - Visible to everyone
                             </Label>
@@ -429,7 +439,7 @@ export default function SendCapsule() {
                 </div>
 
                 {!isConnected && (
-                  <p className="text-center text-yellow-400 text-sm mt-3">
+                  <p className="text-center text-yellow-600 text-sm mt-3">
                     Please connect your wallet to create a time capsule
                   </p>
                 )}

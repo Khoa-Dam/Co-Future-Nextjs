@@ -6,7 +6,7 @@ import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { ConnectButton } from "@mysten/dapp-kit";
-
+import { ScrollProgress } from "@/components/magicui/scroll-progress";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -27,10 +27,12 @@ const Header = () => {
       variants={headerVariants}
       className="border border-transparent [background:padding-box_var(--bg-color),border-box_var(--border-color)]"
     >
+      <ScrollProgress />
+
       <div className="flex items-center  justify-between z-2 relative md:bg-transparent ">
         <Link
           href="/"
-          className=" lg:px-20  md:translate-y-[20px] sm:translate-y-[20px] items-center justify-center border-1 border-white  "
+          className=" lg:px-20  items-center justify-center border-1 border-white  "
         >
           <Image
             src="/images/logo/logo.png"
@@ -40,16 +42,29 @@ const Header = () => {
           />
         </Link>
         {/* Desktop Navigation */}
-        <div className="hidden md:flex md:gap-5 lg:gap-10 uppercase bg-transparent ml-4 transition-colors ">
-          <Link href="/" className="border-1 border-black">
+        <div className="hidden md:flex md:gap-5 lg:gap-10 uppercase bg-transparent ml-10 transition-colors ">
+          <Link
+            href="/"
+            className="hover:border-1 hover:border-black transition-all duration-300"
+          >
             Dashboard
           </Link>
-          <Link href="/send">Send Capsule</Link>
-          <Link href="/capsules">My Capsules</Link>
+          <Link
+            href="/send"
+            className="hover:border-1 hover:border-black transition-all duration-300"
+          >
+            Send Capsule
+          </Link>
+          <Link
+            href="/capsules"
+            className="hover:border-1 hover:border-black transition-all duration-300"
+          >
+            My Capsules
+          </Link>
         </div>
 
         {/* Desktop LET'S TALK button */}
-        <div className="hidden md:flex md:flex-row md:text-sm lg:text-[14px] items-center  px-5 h-10 font-semibold mr-20 ml-20 sm:translate-y-[20px] border-1 border-black flex-row-reverse">
+        <div className="hidden md:flex md:flex-row md:text-sm lg:text-[14px] items-center  px-5 h-10 font-semibold mr-20 ml-20 flex-row-reverse cursor-pointer">
           <ConnectButton />
         </div>
 
@@ -77,7 +92,7 @@ const Header = () => {
             onClick={toggleMenu}
           >
             <Image
-              src="/images/logo/SMURF.png"
+              src="/images/logo/logo.png"
               alt="Smurf Dashboard"
               width={200}
               height={200}
@@ -101,17 +116,9 @@ const Header = () => {
           >
             Projects
           </Link>
-          <Link
-            href="/contact"
-            className={`text-2xl font-medium no-underline uppercase text-center transition-colors duration-300 ease-in-out ${
-              pathname === "/contact" ? "" : "text-[#ffdfbf]"
-            }`}
-            onClick={toggleMenu}
-          >
-            Contact
-          </Link>
-
-          <ConnectButton />
+          <div className="hidden md:flex md:flex-row md:text-sm lg:text-[14px] items-center  px-5 h-10 font-semibold mr-20 ml-20 flex-row-reverse cursor-pointer">
+            <ConnectButton />
+          </div>
         </div>
       </div>
     </motion.header>

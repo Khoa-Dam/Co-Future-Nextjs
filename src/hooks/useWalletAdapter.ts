@@ -1,6 +1,5 @@
 import {
   useCurrentAccount,
-  useSuiClientContext,
   useSuiClient,
   useSignAndExecuteTransaction,
 } from "@mysten/dapp-kit";
@@ -38,7 +37,6 @@ export interface ClaimCapsuleParams {
 
 export function useWalletAdapter() {
   const currentAccount = useCurrentAccount();
-  const clientContext = useSuiClientContext();
   const suiClient = useSuiClient();
   const currentNetwork = "testnet";
   const { mutateAsync: signAndExecute } = useSignAndExecuteTransaction({
@@ -60,7 +58,7 @@ export function useWalletAdapter() {
   });
 
   // Get packageId from env or use empty as default
-  const PACKAGE_ID = import.meta.env.VITE_SUI_PACKAGE_ID || "";
+  const PACKAGE_ID = process.env.NEXT_PUBLIC_SUI_PACKAGE_ID || "";
   console.log("PACKAGE_ID", PACKAGE_ID);
 
   // Transaction handler logic (can be used for all functions)

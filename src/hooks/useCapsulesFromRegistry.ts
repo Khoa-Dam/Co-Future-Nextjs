@@ -4,11 +4,7 @@ import { SuiClient } from "@mysten/sui.js/client";
 import { SuiObjectResponse } from "@mysten/sui.js/client";
 
 // ---- Dùng env hoặc hardcode registry id ----
-const REGISTRY_ID =
-  import.meta.env.VITE_SUI_CAPSULE_REGISTRY_OBJECT_ID || "0x..."; // Thay bằng id thật
 const suiClient = new SuiClient({ url: "https://fullnode.testnet.sui.io" });
-const PACKAGE_ID = import.meta.env.VITE_SUI_PACKAGE_ID || "";
-const CAPSULE_TYPE = `${PACKAGE_ID}::cofuture::Capsule`;
 
 export interface CapsuleObject {
   id: string;
