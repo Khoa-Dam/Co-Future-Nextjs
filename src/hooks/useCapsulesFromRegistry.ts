@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { SuiClient } from "@mysten/sui.js/client";
 import { SuiObjectResponse } from "@mysten/sui.js/client";
 
-// ---- Dùng env hoặc hardcode registry id ----
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const suiClient = new SuiClient({ url: "https://fullnode.testnet.sui.io" });
 
 export interface CapsuleObject {
@@ -26,6 +26,7 @@ function parseCapsule(obj: SuiObjectResponse): CapsuleObject | null {
     obj.data.content.dataType !== "moveObject"
   )
     return null;
+
   const fields = obj.data.content.fields as any;
   return {
     id: obj.data.objectId,
@@ -57,6 +58,7 @@ export function useCapsulesFromRegistry(registryId: string) {
         options: { showContent: true },
       });
 
+      console.log("registryObj", registryObj);
       if (
         !registryObj.data ||
         !registryObj.data.content ||
@@ -76,7 +78,7 @@ export function useCapsulesFromRegistry(registryId: string) {
         setLoading(false);
         return;
       }
-
+      console.log("fields", fields, " asfasfasf ", ids);
       // 3. Query capsules
       const details = await suiClient.multiGetObjects({
         ids,

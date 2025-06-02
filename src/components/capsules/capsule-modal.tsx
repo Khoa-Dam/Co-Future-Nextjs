@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { Capsule } from "@/components/ui/capsule-card";
 
 interface CapsuleModalProps {
-  capsule: any | null;
+  capsule: Capsule | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onClaim?: () => Promise<void>; // thêm prop này
@@ -120,15 +121,6 @@ export function CapsuleModal({
                       <p className="text-sm text-gray-400">SUI Tokens</p>
                     </div>
                   </div>
-                  {capsule.status === "unlockable" && (
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="bg-purple-600 hover:bg-purple-700 text-white"
-                    >
-                      Claim Tokens
-                    </Button>
-                  )}
                 </div>
               )}
 

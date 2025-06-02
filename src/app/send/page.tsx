@@ -28,7 +28,7 @@ import {
 import { useSuiWallet } from "@/hooks/use-sui-wallet";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { NFTSelector } from "@/components/nft-selector";
+import { NFTSelector } from "@/components/capsules/nft-selector";
 import { useWalletAdapter } from "@/hooks/useWalletAdapter";
 import { HyperText } from "@/components/magicui/hyper-text";
 

@@ -1,8 +1,8 @@
 "use client";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { CapsuleCard, Capsule } from "@/components/capsule-card";
-import { CapsuleModal } from "@/components/capsule-modal";
+import { CapsuleCard, Capsule } from "@/components/ui/capsule-card";
+import { CapsuleModal } from "@/components/capsules/capsule-modal";
 import { useWalletAdapter } from "@/hooks/useWalletAdapter";
 import {
   useCapsulesFromRegistry,
@@ -40,7 +40,7 @@ function transformToCapsule(raw: CapsuleObject): Capsule {
   } else if (Array.isArray(raw.encrypted_content)) {
     // array số
     message = new TextDecoder().decode(
-      new Uint8Array(raw.encrypted_content.map((b: number) => b))
+      new Uint8Array((raw.encrypted_content as number[]).map((b: number) => b))
     );
   } else {
     message = "< undecodable >";

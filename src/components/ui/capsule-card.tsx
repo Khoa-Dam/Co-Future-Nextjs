@@ -13,7 +13,7 @@ import { format, formatDistanceToNow } from "date-fns";
 
 // Capsule type LOCAL ONLY (no @shared/schema.ts)
 export interface Capsule {
-  id: string; // ID của object trên Sui blockchain (string)
+  id: string;
   title: string;
   message: string;
   unlockDate: string; // ISO date string

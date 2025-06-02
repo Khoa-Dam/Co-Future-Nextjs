@@ -6,6 +6,7 @@ import {
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { useState } from "react";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface TransactionResult {
   loading: boolean;
   error: string | null;
@@ -158,6 +159,7 @@ export function useWalletAdapter() {
     console.log("claimCapsule", params);
     if (!currentAccount) throw new Error("Please connect your Sui wallet");
     const tx = new TransactionBlock();
+
     tx.moveCall({
       target: `${PACKAGE_ID}::cofuture::claim_capsule`,
       arguments: [
@@ -166,6 +168,7 @@ export function useWalletAdapter() {
         tx.object(params.clockId),
       ],
     });
+    tx.setGasBudget(1000000);
 
     return handleTransaction(tx);
   };
