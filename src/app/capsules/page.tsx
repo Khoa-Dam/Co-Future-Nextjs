@@ -108,11 +108,9 @@ export default function CapsuleList() {
     );
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen pt-16 z-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
-          {/* ... filter + refresh button giữ nguyên ... */}
-        </div>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center"></div>
         {filteredCapsules.length > 0 ? (
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
